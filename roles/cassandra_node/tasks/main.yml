@@ -43,17 +43,26 @@
     patterns: apache-cassandra-*
   register: cass_inst_dir
 
-- name: Rename Cassandra installation folder.
+- name: Rename Cassandra installation directory.
   command: mv {{ cass_inst_dir.files.0['path'] }} /usr/local/cassandra
-  when: cass_inst_dir.matched==1
+  when: cass_inst_dir.matched == 1
 
-#- name: Create Cassandra directory.
-#  file:
-#    path: /usr/local/cassandra
-#    state: directory
-#    mode: 0755
-#    owner: cassandra
-#    group: cassandra
+- name: Create Cassandra data directory.
+  file:
+    path: /usr/local/cassandra/data
+    state: directory
+    mode: 0755
+    owner: cassandra
+    group: cassandra
+  when: cass_inst_dir.matched == 1
+
+- name: Ensure correct ownership of Cassandra program data.
+  file:
+    path: /usr/local/cassandra
+    state: directory
+    mode: 0755
+    owner: cassandra
+    group: cassandra
 
 - name: Install Cassandra systemd service
   template:
@@ -62,6 +71,12 @@
     owner: root
     group: root
     mode: '0755'
+
+- name: Ensure max_map_count is sufficiently high for Cassandra to function.
+  sysctl:
+    name: vm.max_map_count
+    value: 1048575
+    state: present
 
 - name: Install Cassandra configuration files
   template:
@@ -74,5 +89,6 @@
 - name: Enable and start Cassandra service
   systemd:
     name: cassandra.service
+    daemon_reload: yes
     enabled: yes
     state: started
