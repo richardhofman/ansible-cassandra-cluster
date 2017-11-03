@@ -12,7 +12,10 @@
       desired_seeds: 2
 
 - name: Install and configure Cassandra on nodes
-  hosts: cass_nodes
+  hosts: cass_nodes:cass_seed_nodes
+  vars:
+    ansible_ssh_private_key_file: ./private/aws_privkey.pem
+  user: ec2-user
   become: True
   gather_facts: True
   tasks:

@@ -19,18 +19,19 @@
     region: "{{ ec2_region }}"
     filters:
       "tag:class": cassandra
+      "instance-state-name": running
   register: ec2_info
 
 - name: Create host group for non-seed Cassandra nodes
   add_host:
-    hostname: "{{ item.1.private_ip_address }}"
+    hostname: "{{ item.1['public_ip_address'] }}"
     groupname: cass_nodes
   when: item.0 >= instance_params.number_seeds
   with_indexed_items: "{{ ec2_info.instances }}"
 
 - name: Create separate group for seed nodes.
   add_host:
-    hostname: "{{ item.1.public_ip }}"
+    hostname: "{{ item.1['public_ip_address'] }}"
     groupname: cass_seed_nodes
   when: item.0 < instance_params.number_seeds
   with_indexed_items: "{{ ec2_info.instances }}"

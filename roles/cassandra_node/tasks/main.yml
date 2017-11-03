@@ -14,8 +14,8 @@
 - name: Create Cassandra user.
   - user:
     name: cassandra
-    comment: "Cassandra service user"
     group: cassandra
+    comment: "Cassandra service user"
 
 - name: Create Cassandra data directory.
   - file:

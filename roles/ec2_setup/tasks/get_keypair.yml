@@ -14,3 +14,7 @@
     dest: "./private/aws_privkey.pem" 
     mode: 0600
   when: ec2_keypair.changed
+
+- name: Set private key for use as SSH identity
+  set_fact: ansible_ssh_private_key_file='./private/aws_privkey.pem'
+  when: instance_params.keypair == "ansible_prov_key"
