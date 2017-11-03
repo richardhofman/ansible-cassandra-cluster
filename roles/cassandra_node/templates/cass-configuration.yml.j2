@@ -67,8 +67,8 @@ hinted_handoff_throttle_in_kb: 1024
 max_hints_delivery_threads: 2
 
 # Directory where Cassandra should store hints.
-# If not set, the default directory is $CASSANDRA_HOME/data/hints.
-hints_directory: /data/cassandra/hints
+# If not set, the default directory is $CASSANDRA_HOME/usr/local/cassandra/datahints.
+hints_directory: /usr/local/cassandra/datacassandra/hints
 
 # How often hints should be flushed from the internal buffers to disk.
 # Will *not* trigger fsync.
@@ -167,12 +167,12 @@ partitioner: org.apache.cassandra.dht.Murmur3Partitioner
 # the configured compaction strategy.
 # If not set, the default directory is $CASSANDRA_HOME/data/data.
 data_file_directories:
-    - /data/cassandra/data
+    - /usr/local/cassandra/data
 
 # commit log.  when running on magnetic HDD, this should be a
 # separate spindle than the data directories.
 # If not set, the default directory is $CASSANDRA_HOME/data/commitlog.
-commitlog_directory: /data/cassandra/commitlog
+commitlog_directory: /usr/local/cassandra/data/commitlog
 
 # policy for data disk failures:
 # die: shut down gossip and client transports and kill the JVM for any fs errors or
@@ -284,7 +284,7 @@ counter_cache_save_period: 7200
 
 # saved caches
 # If not set, the default directory is $CASSANDRA_HOME/data/saved_caches.
-saved_caches_directory: /data/cassandra/saved_caches
+saved_caches_directory: /usr/local/cassandra/data/saved_caches
 
 # commitlog_sync may be either "periodic" or "batch." 
 # 
