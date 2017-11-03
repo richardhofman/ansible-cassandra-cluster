@@ -24,10 +24,8 @@ All plays will require the local machine (running the playbook) to meet the foll
 * boto3
 * python >= 2.6
 
-### Provisioning directly
+### Provisioning
 1. Clone this repository: ``git clone https://github.com/richardhofman6/....``
 2. Set desired configuration options in `vars.yml`.
 3. Set environmental variables: `AWS_ACCESS_KEY` and `AWS_SECRET_KEY`.
 4. Run: `AWS_ACCESS_KEY=X AWS_SECRET_KEY=Y ansible provision_cass_cluster.yml`
-
-### Provisioning with VPC
