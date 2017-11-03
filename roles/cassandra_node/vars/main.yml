@@ -4,4 +4,3 @@
 cassandra_tgz_src: 'http://www-eu.apache.org/dist/cassandra/3.11.1/apache-cassandra-3.11.1-bin.tar.gz'
 jdk_version: latest
 number_seeds: 2
-#proportion_seeds: 0.35
