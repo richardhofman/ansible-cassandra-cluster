@@ -1,0 +1,7 @@
+---
+# EC2 instance options
+#ec2_params:
+#  instance_type: t2.micro
+#  ami_id: ami-ccecf5af
+#  number_instances: 3
+#  keypair: my_existing_keypair # (if unset, a fresh keypair will be generated)

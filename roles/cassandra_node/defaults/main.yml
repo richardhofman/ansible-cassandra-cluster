@@ -1,0 +1,6 @@
+---
+# defaults file for cassandra_node
+cluster_name: 'default'
+num_tokens: 256
+private_ip: "{{ inventory_hostname }}"
+node_ip: "{{ inventory_hostname }}"

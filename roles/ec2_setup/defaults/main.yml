@@ -1,0 +1,10 @@
+---
+# defaults file for ec2_setup
+
+# EC2 instance options
+instance_params:
+  instance_type: t2.micro
+  ami_id: ami-ccecf5af
+  number_instances: "{{ desired_instances }}"
+  number_seeds: "{{ desired_seeds }}"
+  keypair: ansible_prov_key

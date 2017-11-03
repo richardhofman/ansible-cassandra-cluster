@@ -1,0 +1,5 @@
+---
+# defaults file for common
+
+# EC2 configuration options
+ec2_region: ap-southeast-2

@@ -1,0 +1,16 @@
+---
+# Ensure that we have a working keypair to use with EC2 instances.
+
+- name: Create new keypair
+  ec2_key:
+    name: "ansible_prov_key"
+    region: "{{ ec2_region }}"
+  register: ec2_keypair
+  when: instance_params.keypair == "ansible_prov_key"
+
+- name: Save private key
+  copy:
+    content: "{{ ec2_keypair.key.private_key }}" 
+    dest: "./private/aws_privkey.pem" 
+    mode: 0600
+  when: ec2_keypair.changed

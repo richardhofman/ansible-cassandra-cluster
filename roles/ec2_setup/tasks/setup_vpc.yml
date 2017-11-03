@@ -1,0 +1,18 @@
+---
+# Not currently used.
+- name: Create new VPC
+  ec2_vpc_net:
+    state: present
+    name: "{{ vpc.name }}"
+    cidr_block: "{{ vpc.cidr_block }}"
+    region: "{{ ec2_region }}"
+  register: cassandra_vpc
+
+- name: Create subnet for database servers
+  ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ cassandra_vpc.id }}"
+    cidr: "{{ vpc.cidr_block }}"
+    resource_tags:
+      Name: Cassandra Subnet
+  register: cassandra_subnet

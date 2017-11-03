@@ -1,0 +1,36 @@
+---
+
+- name: Manage EC2 instances
+  ec2:
+    key_name: "{{ instance_params.keypair }}"
+    instance_type: "{{ instance_params.instance_type }}"
+    image: "{{ instance_params.ami_id }}"
+    region: "{{ ec2_region }}"
+    group: cassandra_cluster
+    wait: yes
+    instance_tags:
+      class: cassandra
+    count_tag:
+      class: cassandra
+    exact_count: "{{ instance_params.number_instances }}"
+
+- name: Get instance information
+  ec2_instance_facts:
+    region: "{{ ec2_region }}"
+    filters:
+      "tag:class": cassandra
+  register: ec2_info
+
+- name: Create host group for non-seed Cassandra nodes
+  add_host:
+    hostname: "{{ item.1.private_ip_address }}"
+    groupname: cass_nodes
+  when: item.0 >= instance_params.number_seeds
+  with_indexed_items: "{{ ec2_info.instances }}"
+
+- name: Create separate group for seed nodes.
+  add_host:
+    hostname: "{{ item.1.public_ip }}"
+    groupname: cass_seed_nodes
+  when: item.0 < instance_params.number_seeds
+  with_indexed_items: "{{ ec2_info.instances }}"

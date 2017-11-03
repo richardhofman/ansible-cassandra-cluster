@@ -1,0 +1,17 @@
+---
+
+- ec2_group:
+    name: cassandra_cluster
+    description: A security group for Cassandra nodes.
+    region: "{{ ec2_region }}"
+    rules:
+      - proto: tcp
+        ports:
+          - 22
+          - 7000
+          - 7001
+          - 7199
+          - 9042
+          - 9160
+        cidr_ip: 0.0.0.0/0
+  register: group_info

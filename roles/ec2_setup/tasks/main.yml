@@ -1,0 +1,14 @@
+---
+# tasks file for ec2_setup
+
+- name: Run pre-checks
+  include_tasks: prechecks.yml
+
+- name: Set up security group
+  include_tasks: setup_security_group.yml
+
+- name: Get a valid keypair
+  include_tasks: get_keypair.yml
+
+- name: Set up EC2 instances
+  include_tasks: setup_instances.yml

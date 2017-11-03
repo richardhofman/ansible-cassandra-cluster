@@ -1,0 +1,20 @@
+#
+# Create VPC and populate it with specified number of instances.
+# 
+
+- name: Set up infrastructure/topology
+  hosts: localhost
+  tasks:
+  - include_role:
+      name: ec2_setup
+    vars:
+      desired_instances: 3
+      desired_seeds: 2
+
+- name: Install and configure Cassandra on nodes
+  hosts: cass_nodes
+  become: True
+  gather_facts: True
+  tasks:
+  - include_role:
+      name: cassandra_node

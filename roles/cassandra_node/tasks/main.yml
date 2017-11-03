@@ -1,0 +1,60 @@
+---
+# tasks file for cassandra_node
+
+- name: Update all local packages to latest versions.
+  yum:
+    name: "*"
+    state: latest
+
+- name: Install OpenJDK 1.8
+  yum:
+    name: java-1.8.0-openjdk
+    state: "{{ jdk_version] }}"
+
+- name: Create Cassandra user.
+  - user:
+    name: cassandra
+    comment: "Cassandra service user"
+    group: cassandra
+
+- name: Create Cassandra data directory.
+  - file:
+    path: /data/
+    state: directory
+    mode: 0755
+    owner: cassandra
+    group: cassandra
+  - file:
+    path: /data/cassandra
+    state: directory
+    mode: 0755
+    owner: cassandra
+    group: cassandra
+
+- name: Copy Cassandra
+  unarchive:
+    src: "{{ cassandra_tgz_src }}"
+    dest: /usr/local/cassandra
+    remote_src: yes
+
+- name: Install Cassandra systemd service
+  template:
+    src: cassandra.service.j2
+    dst: /etc/systemd/system/cassandra.service
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install Cassandra configuration files
+  template:
+    src: cass-configuration.yml
+    dst: /usr/local/cassandra/conf/cassandra.yaml
+    owner: cassandra
+    group: cassandra
+    mode: '0755'
+
+- name: Enable and start Cassandra service
+  systemd:
+    name: cassandra.service
+    enabled: yes
+    state: started
