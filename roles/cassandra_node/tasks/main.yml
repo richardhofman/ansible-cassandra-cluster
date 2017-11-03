@@ -1,9 +1,11 @@
 ---
 # tasks file for cassandra_node
 
-- name: Update all local packages to latest versions.
+- name: Update all security-related local packages to latest versions.
   yum:
     name: "*"
+    update_cache: yes
+    security: yes
     state: latest
 
 - name: Install OpenJDK 1.8
@@ -11,44 +13,60 @@
     name: java-1.8.0-openjdk
     state: "{{ jdk_version }}"
 
+- name: Create Cassandra group.
+  group:
+    name: cassandra
+    state: present
+
 - name: Create Cassandra user.
-  - user:
+  user:
     name: cassandra
     group: cassandra
     comment: "Cassandra service user"
 
-- name: Create Cassandra data directory.
-  - file:
-    path: /data/
-    state: directory
-    mode: 0755
-    owner: cassandra
-    group: cassandra
-  - file:
-    path: /data/cassandra
-    state: directory
-    mode: 0755
-    owner: cassandra
-    group: cassandra
+- name: Check if Cassandra is installed.
+  stat:
+    path: /usr/local/cassandra
+  register: cass_dir
 
 - name: Copy Cassandra
   unarchive:
     src: "{{ cassandra_tgz_src }}"
-    dest: /usr/local/cassandra
+    dest: /usr/local/
     remote_src: yes
+  when: not cass_dir.stat.exists
+
+- name: Locate extracted Cassandra directory.
+  find:
+    file_type: directory
+    paths: /usr/local
+    patterns: apache-cassandra-*
+  register: cass_inst_dir
+
+- name: Rename Cassandra installation folder.
+  command: mv {{ cass_inst_dir.files.0['path'] }} /usr/local/cassandra
+  when: cass_inst_dir.matched==1
+
+#- name: Create Cassandra directory.
+#  file:
+#    path: /usr/local/cassandra
+#    state: directory
+#    mode: 0755
+#    owner: cassandra
+#    group: cassandra
 
 - name: Install Cassandra systemd service
   template:
     src: cassandra.service.j2
-    dst: /etc/systemd/system/cassandra.service
+    dest: /etc/systemd/system/cassandra.service
     owner: root
     group: root
     mode: '0755'
 
 - name: Install Cassandra configuration files
   template:
-    src: cass-configuration.yml
-    dst: /usr/local/cassandra/conf/cassandra.yaml
+    src: cass-configuration.yml.j2
+    dest: /usr/local/cassandra/conf/cassandra.yaml
     owner: cassandra
     group: cassandra
     mode: '0755'
