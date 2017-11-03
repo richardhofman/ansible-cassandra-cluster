@@ -1,38 +1,41 @@
-Role Name
+cassandra_node
 =========
 
-A brief description of the role goes here.
+A role that manages a Cassandra node on the target host.
 
 Requirements
 ------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+N/A
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+The following variables are available in this role:
+
+
+* `cassandra_tgz_src`: A URL pointed to a mirror of a tgz file for the desired Cassandra version.
+* `jdk_version`: The package version to use when installing openjdk-1.8.0.
 
 Dependencies
 ------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+N/A
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+This role is intended to be used in conjunction with the `ec2_setup` role, however a simple use case is:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+    - hosts: ec2_instances
+      tasks:
+        - include_role:
+          name: cassandra_node
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Richard Hofman

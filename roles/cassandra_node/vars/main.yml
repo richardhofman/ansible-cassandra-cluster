@@ -3,4 +3,3 @@
 
 cassandra_tgz_src: 'http://www.apache.org/dyn/closer.lua/cassandra/3.11.1/apache-cassandra-3.11.1-bin.tar.gz'
 jdk_version: latest
-number_seeds: 2

@@ -1,38 +1,57 @@
-Role Name
+ec2_setup
 =========
 
-A brief description of the role goes here.
+A role to provision a simple cluster of EC2 instances, with a common security group and keypair.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* boto
+* boto3
 
 Role Variables
 --------------
+The role uses the following variables internally for configuration:
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+  instance_params:
+    instance_type: t2.micro
+    ami_id: ami-ccecf5af
+    number_instances: "{{ desired_instances }}"
+    number_seeds: "{{ desired_seeds }}"
+    keypair: ansible_prov_key
+
+* `instance_type`: EC2 instance type to use for all members of the cluster.
+* `ami_id`: ID of the AMI to use for all members of the cluster.
+* `number_instances`: number of EC2 instances required.
+* `number_seeds`: number of EC2 instances to set aside for Cassandra seed nodes.
+* `keypair`: name of keypair to use. If set to `ansible_prov_key`, the role will create a new provisioning keypair and write the private key in `private/`.
+
+Externally, the following two variables can be directly specified and map as described:
+
+* `desired_instances` => `instance_params.number_instances`
+* `desired_seeds` => `instance_params.number_seeds`
 
 Dependencies
 ------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+N/A
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
     - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+      tasks:
+        - include_role:
+            name: ec2_setup
+          vars:
+            desired_instances: 3
+            desired_seeds: 2
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Richard Hofman
