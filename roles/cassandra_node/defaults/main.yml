@@ -2,5 +2,5 @@
 # defaults file for cassandra_node
 cluster_name: 'default'
 num_tokens: 256
-private_ip: "{{ inventory_hostname }}"
-node_ip: "{{ inventory_hostname }}"
+private_ip: "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}"
+node_ip: "{{ private_ip }}"
